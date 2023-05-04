@@ -125,9 +125,15 @@ def launch_inference(
 
 def get_triton_output_shape(output: torch.Tensor, task: str) -> List[int]:
     triton_output_shape = list(output.shape)
+
     triton_output_shape[0] = -1  # dynamic batch size
-    if task in ["text-generation", "token-classification", "question-answering", "embedding"]:
+    
+    if task == "embedding":
+        return triton_output_shape
+    
+    elif task in ["text-generation", "token-classification", "question-answering"]:
         triton_output_shape[1] = -1  # dynamic sequence size
+        
     return triton_output_shape
 
 
