@@ -7,7 +7,7 @@ RUN apt-get update && \
     python3-dev \
     python3-distutils \
     python3-venv \
-    python3-pip \
+    python3-pip && \
     apt-get clean
 
 ARG UID=1000
@@ -20,6 +20,7 @@ USER ubuntu
 WORKDIR /build
 RUN pip3 install -U pip --no-cache-dir && \
     pip3 install --pre torch --force-reinstall --index-url https://download.pytorch.org/whl/nightly/cu117 --no-cache-dir && \
+    pip3 install nvidia-pyindex --no-cache-dir && \\
     pip3 install sentence-transformers notebook pytorch-quantization ipywidgets --no-cache-dir
 
 RUN mkdir /syncback
@@ -32,7 +33,6 @@ COPY ./src/__init__.py ./src/__init__.py
 COPY ./src/transformer_deploy/__init__.py ./src/transformer_deploy/__init__.py
 
 RUN pip3 install -r requirements.txt && \
-    pip3 install nvidia-pyindex --no-cache-dir && \
     pip3 install -r requirements_gpu.txt
 
 COPY ./ ./
